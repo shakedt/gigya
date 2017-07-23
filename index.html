@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sound Cloud App</title>
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.js"
+            integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+            crossorigin="anonymous"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://connect.soundcloud.com/sdk/sdk-3.1.2.js"></script>
+    <link href="css/index.css" rel="stylesheet" type="text/css">
+    <script src="js/init.js"></script>
+    <script src="js/recentSearches.js"></script>
+    <script src="js/tiles.js"></script>
+    <script src="js/searchHandling.js"></script>
+    <script src="js/songPlayer.js"></script>
+</head>
+<body>
+<div class="container text-center">
+    <div class="row">
+        <div class="col-xs-12">
+            <h1>My Sound Cloud App</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-4">
+        </div>
+        <div class="col-xs-4">
+            <input type="text" placeholder="search for artist or song" class="form-control" id="search">
+        </div>
+        <div class="col-xs-4">
+        </div>
+    </div>
+    <div class="row spacer">
+        <div class="col-xs-3"></div>
+        <div class="col-xs-6">
+            <button class="btn btn-primary" id="searchButton">Search</button>
+            <button class="btn btn-info" id="recentSearches">Recent Searches</button>
+            <button class="btn btn-warning" id="tile">Image View</button>
+            <button class="btn btn-success" id="next">Next</button>
+        </div>
+        <div class="col-xs-3"></div>
+    </div>
+    <div class="row spacer">
+        <div class="col-xs-12">
+            <div id="results"></div>
+            <div id="images"></div>
+            <div id="putTheWidgetHere"></div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    $(document).ready(function(){
+        $("#tile").on("click", function(){
+            var tileState = localStorage['tile'];
+            tile(tileState);
+        });
+
+        $("#next").on("click",function(){
+            console.log("next was clicked");
+            var searchText = $("#search").val();
+            clearDiv();
+            next(searchText);
+        });
+
+        $("#searchButton").on("click", function(){
+            var searchText = $("#search").val();
+            saveSearches(searchText);
+            clearDiv();
+            search(searchText);
+
+        });
+
+        $("#results").on("click", 'div',function() {
+            console.log("was clicked");
+            console.log($(this).attr('id'));
+            var id = $(this).attr('id');
+            id = id + 'img';
+            $("#results").fadeOut();
+            $("#" + id).addClass('centerd');
+            $("#" + id).fadeIn('slow',function(){
+
+            });
+
+        });
+
+        $("#images").on("click", 'img',function() {
+                var songId = $(this).attr('alt');
+                $(this).removeClass('centerd');
+                $("img").fadeOut();
+                playSong(songId);
+        });
+
+        $("#recentSearches").on("click", function () {
+            $("#results").fadeIn();
+            clearDiv();
+            showSearches();
+        });
+    })
+</script>
+</body>
+</html>
